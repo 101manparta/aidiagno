@@ -1,0 +1,180 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import { PublicLayout } from '../components/layout/PublicLayout';
+import { useSiteData } from '../context/SiteDataContext';
+
+function formatCurrency(amount: number | null, currency: string): string {
+  if (amount === null || amount === undefined) return '';
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: currency || 'IDR',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+export function PricingPage() {
+  const { pricingPlans } = useSiteData();
+  const [billingMode, setBillingMode] = useState<'monthly' | 'annual'>('monthly');
+
+  const allLabels = Array.from(
+    new Set(pricingPlans.flatMap((p) => p.features.map((f) => f.label)))
+  );
+
+  return (
+    <PublicLayout>
+      <section className="bg-gradient-to-b from-sky-50/60 to-white border-b border-slate-200 py-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-3 max-w-2xl">
+            <div className="text-xs font-semibold text-[#0756B8]">Skema Paket &amp; Implementasi</div>
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#0F2747]">
+              Paket Layanan yang Fleksibel untuk Skala Fasilitas Anda
+            </h1>
+            <p className="text-base text-slate-600 leading-relaxed">
+              Pilih kategori Starter, Professional, atau Enterprise dengan opsi langganan bulanan, tahunan, biaya implementasi satu kali, atau penawaran kustom.
+            </p>
+          </div>
+
+          <div className="inline-flex items-center gap-1 p-1 bg-slate-100 rounded-lg self-start">
+            <button
+              type="button"
+              onClick={() => setBillingMode('monthly')}
+              className={`px-4 py-2 text-xs font-semibold rounded-md transition-colors ${
+                billingMode === 'monthly'
+                  ? 'bg-white text-[#0F2747] shadow-sm'
+                  : 'text-slate-600 hover:text-[#0F2747]'
+              }`}
+            >
+              Langganan Bulanan
+            </button>
+            <button
+              type="button"
+              onClick={() => setBillingMode('annual')}
+              className={`px-4 py-2 text-xs font-semibold rounded-md transition-colors ${
+                billingMode === 'annual'
+                  ? 'bg-white text-[#0F2747] shadow-sm'
+                  : 'text-slate-600 hover:text-[#0F2747]'
+              }`}
+            >
+              Langganan Tahunan
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
+            {pricingPlans.map((plan) => {
+              const activePrice =
+                billingMode === 'monthly' ? plan.monthlyPrice : plan.annualPrice;
+              return (
+                <div
+                  key={plan.id}
+                  className={`rounded-xl border p-7 flex flex-col justify-between space-y-6 ${
+                    plan.highlighted
+                      ? 'border-[#0756B8] bg-sky-50/30'
+                      : 'border-slate-200 bg-white'
+                  }`}
+                >
+                  <div className="space-y-4">
+                    <div>
+                      <h2 className="text-xl font-bold text-[#0F2747]">{plan.name}</h2>
+                      <p className="text-xs font-medium text-[#0756B8] mt-1">
+                        {plan.targetAudience}
+                      </p>
+                    </div>
+                    <p className="text-sm text-slate-600 leading-relaxed">{plan.description}</p>
+
+                    <div className="py-4 border-y border-slate-200 space-y-1.5">
+                      {plan.showPrice && !plan.isCustomQuote && activePrice !== null ? (
+                        <>
+                          <div className="text-2xl font-bold text-[#0F2747] font-mono tabular-nums">
+                            {formatCurrency(activePrice, plan.currency)}
+                            <span className="text-xs font-sans font-normal text-slate-500 ml-1">
+                              /{billingMode === 'monthly' ? 'bulan' : 'tahun'}
+                            </span>
+                          </div>
+                          {plan.implementationFee !== null && (
+                            <div className="text-xs text-slate-600 font-mono tabular-nums">
+                              Implementasi Satu Kali:{' '}
+                              {formatCurrency(plan.implementationFee, plan.currency)}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <div className="text-lg font-bold text-[#0F2747]">
+                          Penawaran Kustom Sesuai Kebutuhan
+                        </div>
+                      )}
+                      {plan.billingNote && (
+                        <p className="text-xs text-slate-500">{plan.billingNote}</p>
+                      )}
+                    </div>
+
+                    <ul className="space-y-2.5">
+                      {plan.features.map((feat, idx) => (
+                        <li key={idx} className="flex items-start justify-between gap-3 text-xs">
+                          <span className="text-slate-500">{feat.label}</span>
+                          <span className="font-semibold text-[#0F2747] text-right">
+                            {feat.value}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Link
+                    to="/kontak"
+                    className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg transition-colors ${
+                      plan.highlighted
+                        ? 'bg-[#0756B8] text-white hover:bg-[#0F2747]'
+                        : 'bg-white text-[#0F2747] border border-slate-300 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span>{plan.ctaLabel || 'Ajukan Konsultasi'}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Comparison Matrix */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold text-[#0F2747]">Matriks Perbandingan Paket</h2>
+            <div className="overflow-x-auto border border-slate-200 rounded-xl bg-white">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 border-b border-slate-200 text-xs text-slate-600">
+                  <tr>
+                    <th className="py-3.5 px-4 font-semibold">Komponen</th>
+                    {pricingPlans.map((p) => (
+                      <th key={p.id} className="py-3.5 px-4 font-bold text-[#0F2747]">
+                        {p.name}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {allLabels.map((label) => (
+                    <tr key={label} className="hover:bg-slate-50/70">
+                      <td className="py-3.5 px-4 font-medium text-slate-700">{label}</td>
+                      {pricingPlans.map((p) => {
+                        const found = p.features.find((f) => f.label === label);
+                        return (
+                          <td key={p.id} className="py-3.5 px-4 text-xs font-medium text-[#0F2747]">
+                            {found ? found.value : '—'}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </PublicLayout>
+  );
+}

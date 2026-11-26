@@ -1,0 +1,225 @@
+{
+  "entities": {
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized CMS administrator profile with role-based access control.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 254 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "role": { "type": "string", "enum": ["SUPER_ADMIN", "EDITOR"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "role", "createdAt", "updatedAt"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Global website configuration, contact channels, and SEO metadata.",
+      "type": "object",
+      "properties": {
+        "brandName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "logoUrl": { "type": "string", "maxLength": 500 },
+        "contactEmail": { "type": "string", "maxLength": 254 },
+        "contactWhatsapp": { "type": "string", "maxLength": 40 },
+        "officeAddress": { "type": "string", "maxLength": 300 },
+        "seoTitle": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "seoDescription": { "type": "string", "minLength": 1, "maxLength": 320 },
+        "footerNote": { "type": "string", "maxLength": 240 },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string", "maxLength": 254 }
+      },
+      "required": ["brandName", "seoTitle", "seoDescription", "updatedAt", "updatedBy"]
+    },
+    "HomepageContent": {
+      "title": "HomepageContent",
+      "description": "Editable homepage, about section, and demo visibility configuration.",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["draft", "published"] },
+        "heroTitle": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "heroSubtitle": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "heroPrimaryCta": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "heroSecondaryCta": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "heroImageUrl": { "type": "string", "maxLength": 500 },
+        "challenges": { "type": "array" },
+        "solutionsIntro": { "type": "string", "maxLength": 400 },
+        "differentiators": { "type": "array" },
+        "ctaTitle": { "type": "string", "maxLength": 180 },
+        "ctaSubtitle": { "type": "string", "maxLength": 400 },
+        "aboutMission": { "type": "string", "maxLength": 1000 },
+        "aboutVision": { "type": "string", "maxLength": 1000 },
+        "demoEnabled": { "type": "boolean" },
+        "demoDefaultTab": { "type": "string", "maxLength": 40 },
+        "demoBannerNote": { "type": "string", "maxLength": 300 },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string", "maxLength": 254 }
+      },
+      "required": ["status", "heroTitle", "heroSubtitle", "heroPrimaryCta", "heroSecondaryCta", "demoEnabled", "updatedAt", "updatedBy"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "AI Diagno product suite category and feature readiness matrix.",
+      "type": "object",
+      "properties": {
+        "slug": { "type": "string", "pattern": "^[a-z0-9-]+$", "maxLength": 80 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "tagline": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 600 },
+        "iconKey": { "type": "string", "maxLength": 40 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "sortOrder": { "type": "number" },
+        "status": { "type": "string", "enum": ["draft", "published", "archived"] },
+        "features": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string", "maxLength": 254 }
+      },
+      "required": ["slug", "name", "tagline", "summary", "iconKey", "sortOrder", "status", "features", "updatedAt", "updatedBy"]
+    },
+    "PricingPlan": {
+      "title": "PricingPlan",
+      "description": "Configurable pricing tier supporting subscription, implementation fee, and custom quotation.",
+      "type": "object",
+      "properties": {
+        "slug": { "type": "string", "pattern": "^[a-z0-9-]+$", "maxLength": 80 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "targetAudience": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "showPrice": { "type": "boolean" },
+        "isCustomQuote": { "type": "boolean" },
+        "currency": { "type": "string", "maxLength": 10 },
+        "monthlyPrice": { "type": "number" },
+        "annualPrice": { "type": "number" },
+        "implementationFee": { "type": "number" },
+        "billingNote": { "type": "string", "maxLength": 200 },
+        "ctaLabel": { "type": "string", "maxLength": 60 },
+        "highlighted": { "type": "boolean" },
+        "sortOrder": { "type": "number" },
+        "status": { "type": "string", "enum": ["draft", "published", "archived"] },
+        "features": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string", "maxLength": 254 }
+      },
+      "required": ["slug", "name", "targetAudience", "description", "showPrice", "isCustomQuote", "currency", "sortOrder", "status", "features", "updatedAt", "updatedBy"]
+    },
+    "Article": {
+      "title": "Article",
+      "description": "Healthcare laboratory technology resource or article.",
+      "type": "object",
+      "properties": {
+        "slug": { "type": "string", "pattern": "^[a-z0-9-]+$", "maxLength": 120 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "category": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "excerpt": { "type": "string", "minLength": 1, "maxLength": 400 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 20000 },
+        "coverImageUrl": { "type": "string", "maxLength": 500 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "readMinutes": { "type": "number" },
+        "status": { "type": "string", "enum": ["draft", "published", "archived"] },
+        "publishedDate": { "type": "string", "maxLength": 30 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string", "maxLength": 254 }
+      },
+      "required": ["slug", "title", "category", "excerpt", "content", "authorName", "readMinutes", "status", "publishedDate", "createdAt", "updatedAt", "updatedBy"]
+    },
+    "MediaAsset": {
+      "title": "MediaAsset",
+      "description": "CMS media asset entry for product, hero, and editorial imagery.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "altText": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "url": { "type": "string", "minLength": 1, "maxLength": 700000 },
+        "category": { "type": "string", "maxLength": 60 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedBy": { "type": "string", "maxLength": 254 }
+      },
+      "required": ["title", "altText", "url", "category", "createdAt", "updatedBy"]
+    },
+    "ConsultationLead": {
+      "title": "ConsultationLead",
+      "description": "Public consultation request submitted by prospective laboratory or clinic partners.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "facilityName": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "facilityType": { "type": "string", "minLength": 2, "maxLength": 80 },
+        "requiredSolution": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "contactChannel": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 160,
+          "pattern": "(^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$)|(^\\+?[0-9][0-9\\s\\-]{7,18}$)"
+        },
+        "message": { "type": "string", "maxLength": 2000 },
+        "status": {
+          "type": "string",
+          "enum": ["Baru", "Dihubungi", "Konsultasi Terjadwal", "Selesai", "Ditolak"]
+        },
+        "adminNotes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["fullName", "facilityName", "facilityType", "requiredSolution", "contactChannel", "status", "createdAt", "updatedAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable content change history log recorded on CMS mutations.",
+      "type": "object",
+      "properties": {
+        "entityType": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "entityId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "action": { "type": "string", "enum": ["create", "update", "publish", "archive", "delete"] },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "actorEmail": { "type": "string", "maxLength": 254 },
+        "actorUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["entityType", "entityId", "action", "summary", "actorEmail", "actorUid", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Authorized admin accounts with RBAC roles."
+    },
+    "/site_settings/{settingId}": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Publicly readable website settings managed by admins."
+    },
+    "/homepage_content/{docId}": {
+      "schema": { "$ref": "#/entities/HomepageContent" },
+      "description": "Public homepage, about, and demo settings document."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Product suite definitions and feature readiness statuses."
+    },
+    "/pricing_plans/{planId}": {
+      "schema": { "$ref": "#/entities/PricingPlan" },
+      "description": "Editable pricing tiers and billing configurations."
+    },
+    "/articles/{articleId}": {
+      "schema": { "$ref": "#/entities/Article" },
+      "description": "Healthcare laboratory resources and articles."
+    },
+    "/media_assets/{assetId}": {
+      "schema": { "$ref": "#/entities/MediaAsset" },
+      "description": "CMS media asset library."
+    },
+    "/consultation_leads/{leadId}": {
+      "schema": { "$ref": "#/entities/ConsultationLead" },
+      "description": "Submitted consultation leads isolated to authorized admin readers."
+    },
+    "/consultations/{leadId}": {
+      "schema": { "$ref": "#/entities/ConsultationLead" },
+      "description": "Legacy consultation leads collection retained for backward read compatibility."
+    },
+    "/audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Immutable CMS content change history."
+    }
+  }
+}

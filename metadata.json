@@ -1,0 +1,6 @@
+{
+  "name": "AI Diagno",
+  "description": "Platform teknologi laboratorium klinik untuk Smart LIS, Quality Intelligence, dan otomasi alur kerja diagnostik.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
