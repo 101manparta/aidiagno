@@ -6,16 +6,8 @@ import { ProductIcon } from '../components/common/ProductIcon';
 import { SafeImage } from '../components/common/SafeImage';
 import { InteractiveLabDemo } from '../components/demo/InteractiveLabDemo';
 import { PublicLayout } from '../components/layout/PublicLayout';
+import { PricingFlipCard } from '../components/pricing/PricingFlipCard';
 import { useSiteData } from '../context/SiteDataContext';
-
-function formatCurrency(amount: number | null, currency: string): string {
-  if (amount === null || amount === undefined) return '';
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: currency || 'IDR',
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 export function HomePage() {
   const { homepage, products, pricingPlans } = useSiteData();
@@ -301,82 +293,15 @@ export function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
-            {pricingPlans.map((plan) => {
-              const activePrice =
-                billingMode === 'monthly' ? plan.monthlyPrice : plan.annualPrice;
-              return (
-                <div
-                  key={plan.id}
-                  className={`rounded-xl border p-7 flex flex-col justify-between space-y-6 ${
-                    plan.highlighted
-                      ? 'border-[#0756B8] bg-sky-50/30'
-                      : 'border-slate-200 bg-white'
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-[#0F2747]">{plan.name}</h3>
-                      <p className="text-xs font-medium text-[#0756B8] mt-1">
-                        {plan.targetAudience}
-                      </p>
-                    </div>
-
-                    <p className="text-sm text-slate-600 leading-relaxed">{plan.description}</p>
-
-                    <div className="py-4 border-y border-slate-200/80 space-y-1">
-                      {plan.showPrice && !plan.isCustomQuote && activePrice !== null ? (
-                        <>
-                          <div className="text-2xl font-bold text-[#0F2747] font-mono tabular-nums">
-                            {formatCurrency(activePrice, plan.currency)}
-                            <span className="text-xs font-sans font-normal text-slate-500 ml-1">
-                              /{billingMode === 'monthly' ? 'bulan' : 'tahun'}
-                            </span>
-                          </div>
-                          {plan.implementationFee !== null && (
-                            <div className="text-xs text-slate-600 font-mono tabular-nums">
-                              Biaya Implementasi Awal:{' '}
-                              {formatCurrency(plan.implementationFee, plan.currency)}
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <div className="text-lg font-bold text-[#0F2747]">
-                          Penawaran Sesuai Kebutuhan Fasilitas
-                        </div>
-                      )}
-                      {plan.billingNote && (
-                        <p className="text-xs text-slate-500 pt-1">{plan.billingNote}</p>
-                      )}
-                    </div>
-
-                    <ul className="space-y-2.5 text-sm">
-                      {plan.features.map((feat, idx) => (
-                        <li key={idx} className="flex items-start justify-between gap-3">
-                          <span className="text-slate-500 text-xs">{feat.label}</span>
-                          <span className="text-[#0F2747] text-xs font-semibold text-right">
-                            {feat.value}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Link
-                      to="/kontak"
-                      className={`block w-full text-center px-4 py-2.5 text-sm font-semibold rounded-lg transition-colors ${
-                        plan.highlighted
-                          ? 'bg-[#0756B8] text-white hover:bg-[#0F2747]'
-                          : 'bg-white text-[#0F2747] border border-slate-300 hover:bg-slate-50'
-                      }`}
-                    >
-                      {plan.ctaLabel || 'Minta Penawaran'}
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-7 items-stretch">
+            {pricingPlans.map((plan) => (
+              <PricingFlipCard
+                key={plan.id}
+                plan={plan}
+                billingMode={billingMode}
+                headingTag="h3"
+              />
+            ))}
           </div>
 
           <div className="mt-8 text-center">

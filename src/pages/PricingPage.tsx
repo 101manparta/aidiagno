@@ -1,17 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import { PublicLayout } from '../components/layout/PublicLayout';
+import { PricingFlipCard } from '../components/pricing/PricingFlipCard';
 import { useSiteData } from '../context/SiteDataContext';
-
-function formatCurrency(amount: number | null, currency: string): string {
-  if (amount === null || amount === undefined) return '';
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: currency || 'IDR',
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 export function PricingPage() {
   const { pricingPlans } = useSiteData();
@@ -64,80 +54,15 @@ export function PricingPage() {
 
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
-            {pricingPlans.map((plan) => {
-              const activePrice =
-                billingMode === 'monthly' ? plan.monthlyPrice : plan.annualPrice;
-              return (
-                <div
-                  key={plan.id}
-                  className={`rounded-xl border p-7 flex flex-col justify-between space-y-6 ${
-                    plan.highlighted
-                      ? 'border-[#0756B8] bg-sky-50/30'
-                      : 'border-slate-200 bg-white'
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <div>
-                      <h2 className="text-xl font-bold text-[#0F2747]">{plan.name}</h2>
-                      <p className="text-xs font-medium text-[#0756B8] mt-1">
-                        {plan.targetAudience}
-                      </p>
-                    </div>
-                    <p className="text-sm text-slate-600 leading-relaxed">{plan.description}</p>
-
-                    <div className="py-4 border-y border-slate-200 space-y-1.5">
-                      {plan.showPrice && !plan.isCustomQuote && activePrice !== null ? (
-                        <>
-                          <div className="text-2xl font-bold text-[#0F2747] font-mono tabular-nums">
-                            {formatCurrency(activePrice, plan.currency)}
-                            <span className="text-xs font-sans font-normal text-slate-500 ml-1">
-                              /{billingMode === 'monthly' ? 'bulan' : 'tahun'}
-                            </span>
-                          </div>
-                          {plan.implementationFee !== null && (
-                            <div className="text-xs text-slate-600 font-mono tabular-nums">
-                              Implementasi Satu Kali:{' '}
-                              {formatCurrency(plan.implementationFee, plan.currency)}
-                            </div>
-                          )}
-                        </>
-                      ) : (
-                        <div className="text-lg font-bold text-[#0F2747]">
-                          Penawaran Kustom Sesuai Kebutuhan
-                        </div>
-                      )}
-                      {plan.billingNote && (
-                        <p className="text-xs text-slate-500">{plan.billingNote}</p>
-                      )}
-                    </div>
-
-                    <ul className="space-y-2.5">
-                      {plan.features.map((feat, idx) => (
-                        <li key={idx} className="flex items-start justify-between gap-3 text-xs">
-                          <span className="text-slate-500">{feat.label}</span>
-                          <span className="font-semibold text-[#0F2747] text-right">
-                            {feat.value}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Link
-                    to="/kontak"
-                    className={`inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg transition-colors ${
-                      plan.highlighted
-                        ? 'bg-[#0756B8] text-white hover:bg-[#0F2747]'
-                        : 'bg-white text-[#0F2747] border border-slate-300 hover:bg-slate-50'
-                    }`}
-                  >
-                    <span>{plan.ctaLabel || 'Ajukan Konsultasi'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-7 items-stretch">
+            {pricingPlans.map((plan) => (
+              <PricingFlipCard
+                key={plan.id}
+                plan={plan}
+                billingMode={billingMode}
+                headingTag="h2"
+              />
+            ))}
           </div>
 
           {/* Comparison Matrix */}
